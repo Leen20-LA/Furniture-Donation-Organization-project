@@ -1,5 +1,4 @@
-# Furniture Donation Organization
-
+# Furniture Donation Organization Project
 # Description
 A relational database system to manage furniture donations from donors to recipients, coordinated by volunteers. The project tracks donors, recipients, volunteers, furniture items, donation transactions, and the assignment status of furniture to recipients.
 (This project was developed as a team project for a university course.)
