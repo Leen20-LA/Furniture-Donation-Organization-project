@@ -4,9 +4,9 @@ A relational database system to manage furniture donations from donors to recipi
 (This project was developed as a team project for a university course.)
 
 # Technologies Used
-    - Database: Oracle Database 
-    - Language: SQL
-    - Tools: Oracle SQL Developer
+  - Database: Oracle Database
+  - Language: SQL
+  - Tools: Oracle SQL Developer
     
 # Features
   - Complete schema with tables, constraints, and relationships
