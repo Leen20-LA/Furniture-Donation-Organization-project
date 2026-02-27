@@ -1,0 +1,82 @@
+
+CREATE TABLE User_Donor(
+DonorID NUMBER(10)PRIMARY KEY,
+Address VARCHAR2(150),
+DonorName VARCHAR2(50) NOT NULL,
+DonorEmail VARCHAR2(100)UNIQUE 
+);
+
+CREATE TABLE User_Recipient(
+RecipientID NUMBER(10)PRIMARY KEY,
+Address VARCHAR2(150),
+RecipientName VARCHAR2(50)NOT NULL,
+FamilySize NUMBER(3)NOT NULL CHECK(FamilySize >= 1 AND FamilySize <=50)
+);
+
+CREATE TABLE User_Volunteer(
+VolunteerID NUMBER(10)PRIMARY KEY,
+Address VARCHAR2(150),
+VolunteerName VARCHAR2(50)NOT NULL,
+Availability VARCHAR2(1000)NOT NULL,
+TotalHours NUMBER(6,2)DEFAULT 0
+);
+
+CREATE TABLE User_Donor_PhoneNo(
+PhoneNo NUMBER(15),
+DonorID NUMBER(10),
+PRIMARY KEY (PhoneNo , DonorID),
+FOREIGN KEY(DonorID) REFERENCES User_Donor(DonorID)ON DELETE CASCADE
+);
+
+CREATE TABLE User_Recipient_PhoneNo(
+PhoneNo NUMBER(15),
+RecipientID NUMBER(10),
+PRIMARY KEY (PhoneNo , RecipientID),
+FOREIGN KEY(RecipientID) REFERENCES User_Recipient(RecipientID)ON DELETE CASCADE
+);
+
+
+CREATE TABLE User_Volunteer_PhoneNo(
+PhoneNo NUMBER(15),
+VolunteerID NUMBER(10),
+PRIMARY KEY (PhoneNo , VolunteerID),
+FOREIGN KEY(VolunteerID) REFERENCES User_Volunteer(VolunteerID)ON DELETE CASCADE
+);
+
+CREATE TABLE Furntiture_item(
+FurntitureID NUMBER(15)PRIMARY KEY,
+FurntitureType VARCHAR2(100)NOT NULL,
+FurntiturePhoto VARCHAR2(255),
+FurntitureCondition VARCHAR2(20),
+FurntitureSize VARCHAR2(50),
+DonorID NUMBER(10),
+FOREIGN KEY(DonorID) REFERENCES User_Donor(DonorID)ON DELETE CASCADE
+);
+
+
+CREATE TABLE Furniture_Recipient(
+FurntitureID NUMBER(15),
+RecipientID NUMBER(10),
+Status VARCHAR2(30)DEFAULT 'Pending' CHECK(Status IN('Pending','Assigned','Deliverd','Rejected')),
+PRIMARY KEY(FurntitureID,RecipientID),
+FOREIGN KEY (FurntitureID) REFERENCES Furntiture_item(FurntitureID)ON DELETE CASCADE,
+FOREIGN KEY (RecipientID) REFERENCES User_Recipient(RecipientID)ON DELETE CASCADE
+);
+
+CREATE TABLE Donation_Transaction(
+TransID NUMBER(15)PRIMARY KEY,
+Pickup_Date DATE,
+Delivery_Date DATE,
+FurntitureID NUMBER(15)NOT NULL,
+VolunteerID NUMBER(10),
+
+CONSTRAINT chk_dates_logic 
+        CHECK (
+            (Pickup_Date IS NULL AND Delivery_Date IS NULL) OR
+            (Pickup_Date IS NOT NULL AND Delivery_Date IS NULL) OR
+            (Pickup_Date IS NOT NULL AND Delivery_Date IS NOT NULL AND Delivery_Date >= Pickup_Date)
+        ),
+
+FOREIGN KEY (FurntitureID) REFERENCES Furntiture_item(FurntitureID) ON DELETE CASCADE,
+FOREIGN KEY (VolunteerID) REFERENCES User_Volunteer(VolunteerID) ON DELETE SET NULL
+);
